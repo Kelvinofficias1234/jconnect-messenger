@@ -1,0 +1,145 @@
+{
+  "name": "Message",
+  "type": "object",
+  "properties": {
+    "conversation_id": {
+      "type": "string"
+    },
+    "sender_id": {
+      "type": "string"
+    },
+    "text": {
+      "type": "string"
+    },
+    "file_url": {
+      "type": "string"
+    },
+    "file_name": {
+      "type": "string"
+    },
+    "file_type": {
+      "type": "string",
+      "enum": [
+        "image",
+        "video",
+        "document",
+        "audio",
+        "other"
+      ]
+    },
+    "message_type": {
+      "type": "string",
+      "enum": [
+        "text",
+        "poll",
+        "location",
+        "event"
+      ],
+      "default": "text"
+    },
+    "poll_data": {
+      "type": "string",
+      "description": "JSON-encoded poll: { question, options: [{ id, text, voters: [userId] }] }"
+    },
+    "location_lat": {
+      "type": "number"
+    },
+    "location_lng": {
+      "type": "number"
+    },
+    "location_label": {
+      "type": "string"
+    },
+    "is_live_location": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is a live (real-time updating) location share"
+    },
+    "live_expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the live location share expires (null for normal one-time location)"
+    },
+    "event_data": {
+      "type": "string",
+      "description": "JSON-encoded event: { title, date, time, location, description }"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false
+    },
+    "reply_to_id": {
+      "type": "string",
+      "description": "ID of message being replied to"
+    },
+    "reactions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Format: emoji:userId"
+    },
+    "edited_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "deleted_for_everyone": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_view_once": {
+      "type": "boolean",
+      "default": false,
+      "description": "View-once message: content is hidden until the recipient taps to open, then auto-deletes for everyone."
+    },
+    "view_once_opened": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether a View Once message has been opened/viewed by the recipient. Used to display an 'Opened' receipt in the chat bubble after the media self-destructs."
+    }
+  },
+  "required": [
+    "conversation_id",
+    "sender_id"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "data.sender_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": null,
+    "update": {
+      "$or": [
+        {
+          "data.sender_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.sender_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

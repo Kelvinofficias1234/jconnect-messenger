@@ -1,0 +1,112 @@
+{
+  "name": "Conversation",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "direct",
+        "group",
+        "channel"
+      ],
+      "default": "direct"
+    },
+    "name": {
+      "type": "string",
+      "description": "Group/channel name, or empty for direct"
+    },
+    "participant_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "User IDs of participants"
+    },
+    "admin_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Admin user IDs for groups and channels"
+    },
+    "community_id": {
+      "type": "string",
+      "description": "ID of the Community this conversation belongs to (empty for standalone chats)"
+    },
+    "last_message_text": {
+      "type": "string"
+    },
+    "last_message_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_message_sender_id": {
+      "type": "string"
+    },
+    "encrypted_group_keys": {
+      "type": "string",
+      "description": "JSON map of userId to AES-256-GCM encrypted group key (per-member, encrypted by the group creator using ECDH). Empty for direct chats."
+    },
+    "hidden_for": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "User IDs who have hidden this conversation from their view (preserved for admin safety review)"
+    }
+  },
+  "required": [
+    "participant_ids"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "data.participant_ids": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "data.participant_ids": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.participant_ids": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.participant_ids": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

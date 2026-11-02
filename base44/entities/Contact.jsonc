@@ -1,0 +1,89 @@
+{
+  "name": "Contact",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Owner of this contact entry"
+    },
+    "contact_user_id": {
+      "type": "string",
+      "description": "The user who is the contact"
+    },
+    "contact_username": {
+      "type": "string",
+      "description": "Username of the contact for fast rendering"
+    },
+    "contact_display_name": {
+      "type": "string",
+      "description": "Display name of the contact for fast rendering"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "referral",
+        "search",
+        "manual"
+      ],
+      "default": "referral",
+      "description": "How this contact was established"
+    }
+  },
+  "required": [
+    "user_id",
+    "contact_user_id"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "data.user_id": "{{user.id}}"
+        },
+        {
+          "data.contact_user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "data.user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

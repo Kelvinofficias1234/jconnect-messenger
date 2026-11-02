@@ -1,0 +1,111 @@
+{
+  "name": "CallLog",
+  "type": "object",
+  "properties": {
+    "caller_id": {
+      "type": "string",
+      "description": "User ID of the caller"
+    },
+    "callee_id": {
+      "type": "string",
+      "description": "User ID of the person being called"
+    },
+    "call_type": {
+      "type": "string",
+      "enum": [
+        "voice",
+        "video"
+      ],
+      "default": "voice"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "incoming",
+        "outgoing"
+      ],
+      "default": "outgoing"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "missed",
+        "answered",
+        "declined"
+      ],
+      "default": "answered"
+    },
+    "duration_seconds": {
+      "type": "number",
+      "description": "Call duration in seconds (0 if missed)"
+    },
+    "participants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Both caller and callee user IDs"
+    }
+  },
+  "required": [
+    "caller_id",
+    "callee_id",
+    "call_type",
+    "direction",
+    "status",
+    "participants"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "data.caller_id": "{{user.id}}"
+        },
+        {
+          "data.participants": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "data.participants": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.participants": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.participants": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "name": "EmergencyHotline",
+  "type": "object",
+  "properties": {
+    "country": {
+      "type": "string",
+      "description": "Full country name"
+    },
+    "country_code": {
+      "type": "string",
+      "description": "ISO country code"
+    },
+    "service_type": {
+      "type": "string",
+      "enum": [
+        "police",
+        "ambulance",
+        "fire"
+      ]
+    },
+    "phone_number": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "country",
+    "service_type",
+    "phone_number"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": null,
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

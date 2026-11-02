@@ -1,0 +1,102 @@
+{
+  "name": "Community",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Community display name"
+    },
+    "description": {
+      "type": "string",
+      "description": "What this community is about"
+    },
+    "icon_url": {
+      "type": "string",
+      "description": "Community avatar/icon image URL"
+    },
+    "owner_id": {
+      "type": "string",
+      "description": "Community creator/owner user ID"
+    },
+    "admin_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Admin user IDs (can add sub-groups, send announcements, manage members)"
+    },
+    "member_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "All member user IDs including owner and admins"
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this community is discoverable in the Explore directory"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "general",
+        "tech",
+        "education",
+        "business",
+        "entertainment",
+        "sports",
+        "other"
+      ],
+      "default": "general"
+    }
+  },
+  "required": [
+    "name",
+    "owner_id",
+    "member_ids"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "data.owner_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": null,
+    "update": {
+      "$or": [
+        {
+          "data.owner_id": "{{user.id}}"
+        },
+        {
+          "data.admin_ids": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.owner_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
